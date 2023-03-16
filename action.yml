@@ -1,0 +1,55 @@
+name: "Start runner"
+description: "Start a Github Runner on AWS"
+
+inputs:
+  github-token:
+    description: Github Personnal Access Token
+    required: true
+
+  instance-type:
+    description: EC2 instance type (default t2.medium)
+    default: t2.medium
+
+  ami-id:
+    description: EC2 AMI ID
+    default: ami-0a46e0aca3e2e715d
+
+  aws-access-key-id:
+    description: AWS access key id
+    required: false
+  aws-secret-access-key:
+    description: AWS secret access key
+    required: false
+  aws-region:
+    description: AWS region
+    required: false
+
+outputs:
+  runner-label:
+    description: Label of the created runner
+    value: ${{steps.start.outputs.label}}
+  instance-id:
+    description: ID of the created EC2
+    value: ${{steps.start.outputs.ec2-instance-id}}
+
+runs:
+  using: composite
+  steps:
+    - name: Configure AWS credentials
+      if: ${{inputs.aws-access-key-id != ''}}
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        aws-region: ${{ inputs.aws-region }}
+
+    - name: Start EC2 runner
+      id: start
+      uses: machulav/ec2-github-runner@v2
+      with:
+        mode: start
+        github-token: ${{ inputs.github-token }}
+        ec2-instance-type: ${{ inputs.instance-type }}
+        ec2-image-id: ${{ inputs.ami-id }}
+        subnet-id: subnet-c9841284
+        security-group-id: sg-0da6577c9d2e71045
