@@ -32,7 +32,7 @@ jobs:
       label: ${{ steps.start.outputs.runner-label }}
       id: ${{ steps.start.outputs.instance-id }}
     steps:
-      - uses: pr-bob-actions/start-runner@main
+      - uses: pr-bob-actions/start-runner@v1
         id: start
         with:
           github-token: ${{ secrets.GH_TOKEN }}
@@ -40,26 +40,26 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-	job1:
-		needs: [start-runner] # Don't forget this line
-		runs-on: ${{ needs.start-runner.outputs.label }}
-		steps:
-			- run: echo do stuff
+  job1:
+    needs: [start-runner] # Don't forget this line
+    runs-on: ${{ needs.start-runner.outputs.label }}
+    steps:
+      - run: echo do stuff
 
-	job2:
-		needs: [start-runner] # Don't forget this line
-		runs-on: ${{ needs.start-runner.outputs.label }}
-		steps:
-			- run: echo do stuff
+  job2:
+    needs: [start-runner] # Don't forget this line
+    runs-on: ${{ needs.start-runner.outputs.label }}
+    steps:
+      - run: echo do stuff
 
-	# Don't forget to stop the runner !
+  # Don't forget to stop the runner !
   stop-runner:
     name: Stop self-hosted EC2 runner
     needs: [start-runner, job1,job2] # Adapt as needed
     runs-on: ubuntu-latest
     if: ${{ always() }} # Don't forget this line
     steps:
-      - uses: pr-bob-actions/stop-runner@main
+      - uses: pr-bob-actions/stop-runner@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
