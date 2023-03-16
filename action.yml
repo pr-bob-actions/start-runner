@@ -3,7 +3,7 @@ description: "Start a Github Runner on AWS"
 
 inputs:
   github-token:
-    description: Github Personnal Access Token
+    description: Github Personal Access Token
     required: true
 
   instance-type:
@@ -37,7 +37,7 @@ runs:
   steps:
     - name: Configure AWS credentials
       if: ${{inputs.aws-access-key-id != ''}}
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v1-node16
       with:
         aws-access-key-id: ${{ inputs.aws-access-key-id }}
         aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
