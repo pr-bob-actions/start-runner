@@ -12,7 +12,7 @@ AWS credentials (optional):
 
 - `aws-access-key-id`
 - `aws-secret-access-key`
-- `aws-session-token`
+- `aws-region`
 
 AWS credentials can be set in a previous step or passed to the action. If credentials are passed, previously set credentials are ignored
 
